@@ -1,0 +1,24 @@
+#brief demos of tools
+
+=msux=
+
+This is pretty self-explanatory:
+
+[user@computer]./msux.sh
+Usage: msux.sh [.msu file]
+[user@computer]./msux.sh Windows6.0-KB979559-x86.msu
+Extracting file Windows6.0-KB979559-x86.msu...
+Patch cab is output.tmp/Windows6.0-KB979559-x86.cab
+Creating patch-files/win32k.sys.6.0.6001.18468
+Creating patch-files/win32k.sys.6.0.6001.22682
+Creating patch-files/win32k.sys.6.0.6002.18253
+Creating patch-files/win32k.sys.6.0.6002.22396
+[user@computer]ll patch-files/
+total 7976
+-rwxr-xr-x 1 user None 2036224 Jan 11 23:01 win32k.sys.6.0.6001.18468
+-rwxr-xr-x 1 user None 2036736 Jan 11 23:01 win32k.sys.6.0.6001.22682
+-rwxr-xr-x 1 user None 2037248 Jan 11 23:01 win32k.sys.6.0.6002.18253
+-rwxr-xr-x 1 user None 2045440 Jan 11 23:02 win32k.sys.6.0.6002.22396
+
+
+=msPatchInfo=
