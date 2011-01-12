@@ -140,3 +140,9 @@ Assuming you have to add the patches for January 2011, updating can be done as f
 ./msPatchInfo.py 11 2 >> log
 
 ./genMsFileInfoDb.py -u log
+
+==TODO==
+
+Service packs for popular applications and for operating systems need to be added.
+
+appParse.py needs to perform better
