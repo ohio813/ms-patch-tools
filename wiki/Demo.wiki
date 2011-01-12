@@ -88,6 +88,8 @@ Usage ./queryMSDB.py `[`-d bulletin db `]` `[` -f binary `]` < -v version regex 
 ----
 Currently, the database contains file version information for all bulletins from 2005-2011(January). Unfortunately though, it does *NOT* contain service pack information for any applications or operating systems. Since it works by parsing KB articles derived from bulletins, this information is not available.
 
+*For reasons explained below, when you want to find binaries that belong to a certain version of a product you are better off using the '-v' option and specifying a regex that uses the major version of the application. For Office 2007: "-v 12\.0". The '-p' switch works well for operating systems, but not so well for applications.*
+
 ==How it works==
 
 Several files are used to parse bulletins and generate the database.
