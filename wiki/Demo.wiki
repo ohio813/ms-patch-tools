@@ -23,4 +23,6 @@ total 7976<br />
 
 =msPatchInfo=
 
-This consists of several python scripts used to build, update, and query the database of file version information. The database itself is simply a python 'shelve' file
+This consists of several python scripts used to build, update, and query the database of file version information. The database itself is simply a python 'shelve' file. We'll start with the query interface, and then discuss the other scripts after.
+
+a
