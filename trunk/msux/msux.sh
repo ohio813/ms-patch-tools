@@ -11,6 +11,13 @@ dName=`dirname $0`
 fName=$1
 ext=${fName#*.}
 
+#
+if [ $# -ne 1 ]
+then
+    echo "Usage: `basename $0` [.msu file]"
+    exit 1
+fi
+
 echo "Extracting file $fName..."
 rm -rf $tmpDir $tmpDir2 $outputDir
 
