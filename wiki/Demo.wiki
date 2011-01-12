@@ -98,7 +98,7 @@ Usage: ./msPatchInfo.py < year > < bulletin num  >
 
 Retrieves and parses a single bulletin, outputting it to stdout in text based format. It's typically used like this to retrieve a bunch of bulletins for further parsing:
 
-for i in `seq 1 74`; do ./msPatchInfo.py 9 $i >> 2009; done
+for i in ```seq 1 74```; do ./msPatchInfo.py 9 $i >> 2009; done
 
 *genMsFileInfoDb.py*
 
