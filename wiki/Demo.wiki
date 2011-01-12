@@ -4,16 +4,16 @@
 
 This is pretty self-explanatory:
 
-`[`user@computer`]`./msux.sh<br />
+./msux.sh<br />
 Usage: msux.sh `[`.msu file`]`<br />
-`[`user@computer`]`./msux.sh Windows6.0-KB979559-x86.msu<br />
+./msux.sh Windows6.0-KB979559-x86.msu<br />
 Extracting file Windows6.0-KB979559-x86.msu...<br />
 Patch cab is output.tmp/Windows6.0-KB979559-x86.cab<br />
 Creating patch-files/win32k.sys.6.0.6001.18468<br />
 Creating patch-files/win32k.sys.6.0.6001.22682<br />
 Creating patch-files/win32k.sys.6.0.6002.18253<br />
 Creating patch-files/win32k.sys.6.0.6002.22396<br />
-`[`user@computer`]`ll patch-files/<br />
+ll patch-files/<br />
 total 7976<br />
 -rwxr-xr-x 1 user None 2036224 Jan 11 23:01 win32k.sys.6.0.6001.18468<br />
 -rwxr-xr-x 1 user None 2036736 Jan 11 23:01 win32k.sys.6.0.6001.22682<br />
