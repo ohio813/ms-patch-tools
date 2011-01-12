@@ -33,7 +33,7 @@ def printToks(toks):
 #
 def usage(prog):
     print "Usage %s [ -d bulletin db ] [ -f binary ] < -v version regex > < -s service pack regex >\n" \
-            "\t< -p product regex > < -b branch regex (GDR/QFE/LDR) > < -a x86/x64/ia64 (default x86) >\n" \
+            "\t< -p product regex > < -b branch regex (GDR/QFE/LDR)(default GDR) > < -a x86/x64/ia64 (default x86) >\n" \
             "\t< -u sort by bulletin id instead of dll version > < -y verbose >\n" % (prog)
     sys.exit(1)
 
