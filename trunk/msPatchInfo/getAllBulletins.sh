@@ -2,7 +2,7 @@
 
 #
 baseYear=5
-declare -a maxBulletinIDs=(55 78 69 78 74 106)
+declare -a maxBulletinIDs=(55 78 69 78 74 106 2)
 
 #
 curYear=$baseYear
