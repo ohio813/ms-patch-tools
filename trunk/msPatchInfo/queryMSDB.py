@@ -163,7 +163,7 @@ if __name__ == "__main__":
     if bSort:
 
         #turn the MSXX-YYY into an integer for sorting purposes
-        res = sorted(res, key=lambda b:int(b["bulletin"][2:4])*1000 + int(b["bulletin"][6:]))
+        res = sorted(res, key=lambda b:int(b["bulletin"][2:4])*1000 + int(b["bulletin"][5:]))
         
         #subsort by version
         out = []
