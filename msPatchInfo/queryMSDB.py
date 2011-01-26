@@ -83,12 +83,11 @@ def prodFilter(dlls, pRegEx):
 if __name__ == "__main__":
 
     #
-    qBinary,qVers,qSP,qProd= None,None,None,None
+    qBinary = qVers = qSP = qProd= None
     dbFile = "patch-info.db"
     qArch = "x86"
     qBranch = "GDR"
-    bSort = False
-    verbose = False
+    bSort  = verbose = False
 
     #
     try:
