@@ -46,7 +46,7 @@ def getBranch(branch, version):
 
     #Vista
     if build in ["6000", "6001", "6002"]:
-        if rev[:2] in ["16", "17", "18", "63", "70"]:
+        if rev[:2] in ["16", "17", "18", "19", "63", "70"]:
             return "GDR"
         elif rev[:2] in ["20", "21", "22", "23", "65", "71"]:
             return "LDR"
