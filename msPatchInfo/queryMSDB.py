@@ -34,7 +34,8 @@ def printToks(toks):
 def usage(prog):
     print "Usage %s [ -d bulletin db ] [ -f binary ] < -v version regex > < -s service pack regex >\n" \
             "\t< -p product regex > < -b branch regex (GDR/QFE/LDR)(default GDR) > < -a x86/x64/ia64 (default x86) >\n" \
-            "\t< -u sort by bulletin id instead of dll version > < -y verbose >\n" % (prog)
+            "\t< -u sort by bulletin id instead of dll version > < -y verbose >\n" \
+            "\t< -l show latest bulletin >\n" % (prog)
     sys.exit(1)
 
 #compare two DLL/EXE version strings
@@ -62,6 +63,14 @@ def verSort(l, r):
     #equal
     return 0
 
+#determine the most recent bulletin id in the db
+def getLastBulletin(dllDict):
+    newest = "MS00-000"
+    for binary, dllList in dllDict.items():
+        for dll in dllList:
+            if int(dll["bulletin"][2:4])*1000 + int(dll["bulletin"][5:]) > int(newest[2:4])*1000 + int(newest[5:]):
+                newest = dll["bulletin"]
+    return newest
 
 #
 def prodFilter(dlls, pRegEx):
@@ -87,11 +96,11 @@ if __name__ == "__main__":
     dbFile = "patch-info.db"
     qArch = "x86"
     qBranch = "GDR"
-    bSort  = verbose = False
+    showLatest = bSort  = verbose = False
 
     #
     try:
-        opts, args = getopt.getopt(sys.argv[1:], "d:f:v:s:p:b:a:uy")
+        opts, args = getopt.getopt(sys.argv[1:], "d:f:v:s:p:b:a:uyl")
     except getopt.GetoptError, err:
         print str(err)
         usage(sys.argv[0])
@@ -102,6 +111,8 @@ if __name__ == "__main__":
             dbFile = a
         elif o == "-f":
             qBinary = string.upper(a)
+        elif o == "-l":
+            showLatest = True
         elif o == "-v":
             qVers = a
         elif o == "-s":
@@ -121,7 +132,7 @@ if __name__ == "__main__":
         else:
             usage(sys.argv[0])
 
-    if not qBinary:
+    if not qBinary and not showLatest:
         usage(sys.argv[0])
     
     print "-{Querying db %s...\n" % (dbFile)
@@ -130,6 +141,11 @@ if __name__ == "__main__":
     msDB = shelve.open(dbFile)
     dllDict = msDB["data"]
     msDB.close()
+
+    #just let them know the last bulletin id we have
+    if showLatest:
+        print "Last bulletin is %s" % (getLastBulletin(dllDict))
+        sys.exit(0)
     
     #find the target binary
     try:
