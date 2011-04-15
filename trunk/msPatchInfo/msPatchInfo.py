@@ -392,6 +392,15 @@ class msPatchFileInfo:
         else:
             return self.getOldFileInfo(soup, year, num)
 
+    #
+    def queryMostRecent(self):
+        soup = self.makeSoup("http://www.microsoft.com/technet/security/Current.aspx")
+        resTable = soup.find("table", id="searchControl_resultsGrid")
+        firstBullRow = resTable.findAll("tr", limit=2)[1]
+        link = firstBullRow.find("a")
+        bull = os.path.splitext(link["href"].rpartition("/")[2])[0]
+        print bull
+
 ############################################
 if __name__ == '__main__':
 
