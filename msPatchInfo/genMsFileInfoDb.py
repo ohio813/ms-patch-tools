@@ -2,12 +2,14 @@
 #
 import getopt
 import re
+import os
 import string
 import shutil
 import sys
 import appParse
 import shelve
-
+import queryMSDB
+import msPatchInfo
 
 #
 def getArch(arch, defArch):
@@ -124,8 +126,8 @@ def slurpBulletins(bFile):
 
 #
 def usage(prog):
-    print ("Usage: %s [ -g generate [bulletin file] ] [ -u update [bulletin file] ]\n"
-            "\t<-d database file (default patch-info.db)>" % (prog)
+    print ("Usage: %s [ -g generate [bulletin file] ] [ -m manual update [bulletin file] ]\n"
+            "\t<-d database file (default patch-info.db)> <-u automatically update db>" % (prog)
             )
     sys.exit(1)
 
@@ -134,12 +136,12 @@ if __name__ == "__main__":
 
     #
     bFile = None
-    doUpdate = False
+    autoUpdate = doUpdate = False
     dbFile = "patch-info.db"
 
     #
     try:
-        opts, args = getopt.getopt(sys.argv[1:], "g:u:d:")
+        opts, args = getopt.getopt(sys.argv[1:], "g:m:d:u")
     except getopt.GetoptError, err:
         print str(err)
         usage(sys.argv[0])
@@ -147,15 +149,17 @@ if __name__ == "__main__":
     for o, a in opts:
         if o == "-g":
             bFile = a
-        elif o == "-u":
+        elif o == "-m":
             bFile = a
             doUpdate = True
         elif o == "-d":
             dbFile = a
+        elif o == "-u":
+            autoUpdate = True
         else:
             usage(sys.argv[0])
 
-    if not bFile:
+    if not bFile and not autoUpdate:
         usage(sys.argv[0])
 
     #backup the old DB file
@@ -166,13 +170,43 @@ if __name__ == "__main__":
     
     dbh = shelve.open(dbFile)
 
-    if doUpdate:
+    if doUpdate or autoUpdate:
         dllDict = dbh ["data"]
         print "Updating existing database %s" % (dbFile)
     else:
         dllDict = {}
         print "Creating new database %s" % (dbFile)
     
+    #determine the most recent bulletin in the db, compare to most recent on ms site
+    if autoUpdate:
+        cur = queryMSDB.getLastBulletin(dllDict)
+        patchInfo = msPatchInfo.msPatchFileInfo()
+        latest = patchInfo.queryMostRecent()
+        curYear = int(cur[2:4])
+        curNum = int(cur[5:8])
+        latestYear = int(latest[2:4])
+        latestNum = int(latest[5:8], 10)
+        
+        if curYear < latestYear:
+            print "Sorry, I can't update from last year automatically (cur %d, latest %d)" % (curYear, latestYear)
+            sys.exit(0)
+
+        if curNum == latestNum:
+            print "Patch DB is all up to date (%d-%d is most recent)" % (latestYear, latestNum)
+            sys.exit(0)
+
+        print "Updating database from %d-%d to %d-%d" % (curYear, curNum, latestYear, latestNum)
+
+        #ok, we need to update some bulletins, let's do it
+        bFile = "bulletinInfo.txt"
+        f = open(bFile, "wb")
+        for n in xrange(curNum + 1, latestNum + 1):
+            f.write("-[Retrieving file information for bulletin MS%.2d-%.3d\n" % (curYear, n))
+            bInfo = patchInfo.getBulletinFileInfo(curYear, n)
+            text = patchInfo.generateOutput(bInfo)
+            f.write(text)
+        f.close()
+
     bulletins= slurpBulletins(bFile)
 
     for (bID, dllList) in bulletins.items():
@@ -184,3 +218,7 @@ if __name__ == "__main__":
     dbh["data"] = dllDict
 
     dbh.close()
+
+    #we created it, so delete it
+    if autoUpdate:
+        os.remove(bFile)

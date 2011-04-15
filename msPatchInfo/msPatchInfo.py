@@ -266,21 +266,6 @@ class msPatchFileInfo:
             return s.strip()
         else:
             return None
-        """
-        #traverse children until we find a string, or None
-        if len(elem.contents[0]) == 0:
-            return None
-
-        cur = elem.contents[0]
-        while isinstance(cur, Tag):
-            cur = cur.contents[0]
-        
-        #the strip catches empty version columns
-        if isinstance(cur, NavigableString) and cur.strip() != "":
-            return cur.strip()
-        else:
-            return None
-        """
 
     #
     def getOldFileInfo(self, soup, year, num):
@@ -372,23 +357,22 @@ class msPatchFileInfo:
             results = []
             for link in kbs:
                 results.append(self.parseKB(link))
-
-            return results
         else:
-            return [ret]
+            results = [ret]
+            
+        return results
 
     #
     def getBulletinFileInfo(self, year, num):
 
         print "-[Retrieving file information for bulletin MS%.2d-%.3d" % (year, num)
+        
         url = 'http://www.microsoft.com/technet/security/Bulletin/MS%.2d-%.3d.mspx' % (year, num)
 
         soup = self.makeSoup(url)
 
         if year > 8 or (year == 8 and num >= 18):
             return self.getNewFileInfo(soup, year, num)
-        #elif year == 8 and num == 10:   #sigh
-            #return [self.parseKB("http://support.microsoft.com/kb/944533")]
         else:
             return self.getOldFileInfo(soup, year, num)
 
@@ -399,7 +383,46 @@ class msPatchFileInfo:
         firstBullRow = resTable.findAll("tr", limit=2)[1]
         link = firstBullRow.find("a")
         bull = os.path.splitext(link["href"].rpartition("/")[2])[0]
-        print bull
+        return bull
+
+    #
+    def generateOutput(self, results):
+
+        #return is a list of lists of tuples
+        output = ""
+        for res in results:
+    
+            for r in res:
+                target = r[0]
+                binaries = r[1]
+             
+                output += "\n[%s]\n" % (target)
+                output += "+" + "-"*81 + "+\n"
+                output += "|%-25s %-20s %-7s %-10s %-15s|\n" % ("File name", "File version", "Arch", "SP Req", "Branch")
+                output += "|" + "-"*81 + "|\n"
+             
+                for binary in binaries:
+                    fName = "[" + binary["File name"] + "]"
+                    fVers = "[" + binary["File version"] + "]"
+                    if binary.has_key("SP requirement"):
+                        spReq = "[" + binary["SP requirement"] + "]"
+                    else:
+                        spReq = "[]"
+                    if binary.has_key("Service branch"):
+                        branch = "[" + binary["Service branch"] + "]"
+                    else:
+                        branch = "[]"
+                    if binary.has_key("Platform"):
+                        platform = "[" + binary["Platform"] + "]"
+                    else:
+                        platform = "[]"
+    
+                    output += "|%-25s %-20s %-7s %-10s %-15s|\n" % (fName, fVers, platform, spReq, branch)
+    
+                output += "+" + "-"*81 + "+\n"
+    
+        output += "#"*79 + "\n"
+        return output
 
 ############################################
 if __name__ == '__main__':
@@ -412,37 +435,4 @@ if __name__ == '__main__':
     num = int(sys.argv[2])
     iPatch = msPatchFileInfo()
     results = iPatch.getBulletinFileInfo(yr, num)
-
-    #return is a list of lists of tuples
-    for res in results:
-
-        for r in res:
-            target = r[0]
-            binaries = r[1]
-            
-            print "\n[%s]" % (target)
-            print "+" + "-"*81 + "+"
-            print "|%-25s %-20s %-7s %-10s %-15s|" % ("File name", "File version", "Arch", "SP Req", "Branch")
-            print "|" + "-"*81 + "|"
-            
-            for binary in binaries:
-                fName = "[" + binary["File name"] + "]"
-                fVers = "[" + binary["File version"] + "]"
-                if binary.has_key("SP requirement"):
-                    spReq = "[" + binary["SP requirement"] + "]"
-                else:
-                    spReq = "[]"
-                if binary.has_key("Service branch"):
-                    branch = "[" + binary["Service branch"] + "]"
-                else:
-                    branch = "[]"
-                if binary.has_key("Platform"):
-                    platform = "[" + binary["Platform"] + "]"
-                else:
-                    platform = "[]"
-
-                print "|%-25s %-20s %-7s %-10s %-15s|" % (fName, fVers, platform, spReq, branch)
-
-            print "+" + "-"*81 + "+"
-    
-    print "#"*79
+    print iPatch.generateOutput(results)
