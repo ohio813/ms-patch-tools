@@ -55,9 +55,9 @@ def getBranch(branch, version):
 
     #Win7
     if build in ["7600"]:
-        if rev[:2] == "16":
+        if rev[:2] in ["14", "16", "17"]:
             return "GDR"
-        elif rev[:2] == "20":
+        elif rev[:2] in ["20", "21"]:
             return "LDR"
         else:
             raise Exception, "Can't get branch of %s" % version
