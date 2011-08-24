@@ -130,7 +130,7 @@ You can use the patch-info.db file provided in the release, or you can build you
 
 ./getAllBulletins.sh
 
-./genMsFileInfoDb.py all-years
+./genMsFileInfoDb.py -g all-years
 
 ./queryMSDB.py [bla]
 
