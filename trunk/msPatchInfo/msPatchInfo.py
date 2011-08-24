@@ -435,4 +435,6 @@ if __name__ == '__main__':
     num = int(sys.argv[2])
     iPatch = msPatchFileInfo()
     results = iPatch.getBulletinFileInfo(yr, num)
-    print iPatch.generateOutput(results)
+    res = iPatch.generateOutput(results)
+    res = ''.join(filter(lambda x:x in string.printable, res))
+    print res
