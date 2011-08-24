@@ -204,6 +204,7 @@ if __name__ == "__main__":
             f.write("-[Retrieving file information for bulletin MS%.2d-%.3d\n" % (curYear, n))
             bInfo = patchInfo.getBulletinFileInfo(curYear, n)
             text = patchInfo.generateOutput(bInfo)
+            text = ''.join(filter(lambda x:x in string.printable, text))
             f.write(text)
         f.close()
 
