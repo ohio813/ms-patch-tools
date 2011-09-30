@@ -379,9 +379,13 @@ class msPatchFileInfo:
     #
     def queryMostRecent(self):
         soup = self.makeSoup("http://www.microsoft.com/technet/security/Current.aspx")
-        resTable = soup.find("table", id="searchControl_resultsGrid")
-        firstBullRow = resTable.findAll("tr", limit=2)[1]
-        link = firstBullRow.find("a")
+        try:
+            resTable = soup.find("table", id="tblSBResults")
+            firstBullRow = resTable.findAll("tr", limit=2)[1]
+            link = firstBullRow.find("a")
+        except Exception as err:
+            print "Error querying most recent bulletin: %s" % (err)
+            sys.exit(1)
         bull = os.path.splitext(link["href"].rpartition("/")[2])[0]
         return bull
 

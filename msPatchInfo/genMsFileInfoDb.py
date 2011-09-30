@@ -192,7 +192,7 @@ if __name__ == "__main__":
             sys.exit(0)
 
         if curNum == latestNum:
-            print "Patch DB is all up to date (%d-%d is most recent)" % (latestYear, latestNum)
+            print "Patch DB is all up to date (MS%d-%d is most recent)" % (latestYear, latestNum)
             sys.exit(0)
 
         print "Updating database from %d-%d to %d-%d" % (curYear, curNum, latestYear, latestNum)
